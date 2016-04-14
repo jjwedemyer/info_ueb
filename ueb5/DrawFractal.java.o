@@ -1,0 +1,78 @@
+/* shit made by Jakob Wedemeyer */
+class DrawFractal {
+	public static void main(String[] args)
+	{
+		int count = StdIn.readInt();
+
+		StdIn.readLine();
+		char[] str = new char[count];
+		for (int i = 0; i < count; i++)
+		{
+			str[i] = StdIn.readChar();
+		}
+		StdIn.readLine();
+
+		draw(count, str);
+	}
+
+	public static void draw(int count, char[] str)
+	{
+		double x = 1.0, y = 0.0, xo = 0, yo = 0;
+		double[] val_x     = new double[count];
+		double[] val_y     = new double[count];
+		double   axismax_x = 0;
+		double   axismax_y = 0;
+		double   axismin_x = 0, axismin_y = 0;
+
+		for (int i = 0; i <= count; i++)
+		{
+			double swap;
+			x = (y < x) ? 1.0 : 0.0;
+			y = (x < y) ? 1.0 : 0.0;
+			if (str[i] == 'R')
+			{
+				swap = -x;
+				x    = y;
+				y    = swap;
+			}
+			if (str[i] == 'L')
+			{
+				swap = x;
+				x    = -y;
+				y    = swap;
+			}
+			val_x[i] = xo + x;
+			val_y[i] = yo + y;
+//simulationsanteil um die Größe des canvas zu bestimmen
+			if (xo >= 0)
+			{
+				axismax_x = (axismax_x < xo) ? xo : axismax_x;
+			}
+			if (xo < 0)
+			{
+				axismin_x = (axismin_x > xo) ? xo : axismin_x;
+			}
+			if (yo >= 0)
+			{
+				axismax_y = (axismax_y < yo) ? yo : axismax_y;
+			}
+			if (yo < 0)
+			{
+				axismin_y = (axismin_y > yo) ? yo : axismin_y;
+			}
+		}
+
+		//Jetzt wird gezeichnet
+		StdDraw.setXscale(axismin_x,axismax_x);
+		StdDraw.setYscale(axismin_y,axismax_y);
+
+		xo = 0.0;
+		yo = 0.0;
+
+		for (i=0;i <= count ;i++ ) {
+			StdDraw.line(xo, yo,val_x[i],val_y[i]);
+			xo = val_x;
+			yo = val_y;
+		}
+	}
+}
